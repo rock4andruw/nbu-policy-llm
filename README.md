@@ -36,30 +36,55 @@ SLP 覆蓋率:   91.3% (1,304/1,429)
 
 ## 🚀 快速開始
 
-### 1. 檢視資料
+### 新電腦設定
+
+如果你是第一次使用本專案，請先參考：
+
+📘 **[SETUP.md](SETUP.md) - 新電腦完整設定指南**
+- Windows 和 macOS 環境設定
+- Python 安裝步驟
+- 必要檔案下載
+- 完整操作流程
+
+### 日常使用流程
+
+#### 步驟 1: 從 NBU Server 導出資料
+
+在 NetBackup Master Server 上執行：
 
 ```bash
-# 查看前 5 筆資料
-head -6 policies_llm_final.csv | column -t -s ','
-
-# 統計筆數
-wc -l policies_llm_final.csv
+cd /tmp
+bppllist -allpolicies -json > policies.json
+/usr/openv/netbackup/bin/admincmd/nbstlutil list -slp -json > slp.json
 ```
 
-### 2. 使用 Vertex AI
+詳細說明: [NBU_SERVER_COMMANDS.md](NBU_SERVER_COMMANDS.md)
 
+#### 步驟 2: 傳輸到本機
+
+**macOS**:
 ```bash
-# 上傳到 Cloud Storage
-gsutil cp policies_llm_final.csv gs://your-bucket/
-
-# 在 Vertex AI 中建立資料存放區並指向該檔案
+cd ~/Documents/nbu\ ai
+scp root@nbu-server:/tmp/policies.json ./
+scp root@nbu-server:/tmp/slp.json ./
 ```
 
-### 3. 設定 System Prompt
+**Windows**: 使用 WinSCP 下載兩個 JSON 檔案
 
-將 `llm_system_prompt.md` 的內容複製到 LLM 平台的 System Prompt 設定。
+#### 步驟 3: 本地處理
 
-### 4. 測試查詢
+**macOS**:
+```bash
+./process_local_json.sh
+```
+
+**Windows**: 雙擊 `process_local_json.bat`
+
+#### 步驟 4: 上傳到知識庫
+
+將產生的 `policies_llm_final.csv` 上傳到公司知識庫平台（Vertex AI 等）。
+
+### 測試查詢
 
 ```
 Q: "21C_MSSQL_Online_21sunlike 的備份保留多久？"
@@ -69,7 +94,11 @@ Q: "哪些策略在凌晨 3 點執行？"
 A: [列出相關策略]
 ```
 
-📚 **詳細說明請參考**: [使用說明文件](USER_GUIDE.md)
+📚 **完整文檔**:
+- [SETUP.md](SETUP.md) - 新電腦設定指南
+- [USAGE_WORKFLOW.md](USAGE_WORKFLOW.md) - 詳細使用流程
+- [USER_GUIDE.md](USER_GUIDE.md) - 知識庫使用說明
+- [NBU_SERVER_COMMANDS.md](NBU_SERVER_COMMANDS.md) - NBU Server 操作
 
 ---
 
@@ -78,18 +107,32 @@ A: [列出相關策略]
 ```
 nbu ai/
 ├── README.md                          # 專案說明（本文件）
-├── USER_GUIDE.md                      # 詳細使用說明 ⭐
+├── SETUP.md                           # 新電腦設定指南 ⭐ 新
+├── USAGE_WORKFLOW.md                  # 完整使用流程 ⭐ 新
+├── NBU_SERVER_COMMANDS.md             # NBU Server 操作指南 ⭐ 新
+├── USER_GUIDE.md                      # 知識庫使用說明 ⭐
 ├── llm_system_prompt.md               # LLM System Prompt ⭐
-├── policies_llm_final.csv             # 主要知識庫檔案 ⭐
-├── generate_final_csv_complete.py     # CSV 生成腳本
+│
+├── process_local_json.sh              # macOS/Linux 處理腳本 🆕
+├── process_local_json.bat             # Windows 處理腳本 🆕
+├── generate_final_csv_complete.py     # Python 主程式
+│
+├── policies_llm_final.csv             # 輸出的知識庫檔案 ⭐
 ├── retention_level.json               # 保留等級對照表
+│
+├── tests/                             # 測試目錄 🆕
+│   ├── README.md                      # 測試說明
+│   ├── test_policy_slp_retention.py   # 保留邏輯測試
+│   └── test_policy_slp_integration.py # 整合測試
+│
 ├── storage_unit_groups_info.md        # Storage Unit Groups 說明
 ├── project_status_summary.md          # 專案現況彙整
 └── .gitignore                         # Git 忽略清單
 
 資料來源（不納入版本控制）:
 ├── policies.json                      # NetBackup Policies (5.7MB)
-└── slp.json                          # Storage Lifecycle Policies (256KB)
+├── slp.json                          # Storage Lifecycle Policies (256KB)
+└── backups/                          # 自動備份目錄
 ```
 
 ---

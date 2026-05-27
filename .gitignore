@@ -46,3 +46,9 @@ sample_*.csv
 
 # 日誌
 *.log
+
+# 備份目錄
+backups/
+
+# Claude 工作目錄
+.claude/

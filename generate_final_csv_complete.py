@@ -8,6 +8,7 @@
 
 import json
 import csv
+import os
 from datetime import datetime
 
 
@@ -259,10 +260,13 @@ def generate_csv_rows(policies_data, slps_dict, retention_map, sample_policies=N
 
 
 def main():
-    # 檔案路徑
-    POLICIES_FILE = '/Users/andruw/Documents/nbu ai/policies.json'
-    SLP_FILE = '/Users/andruw/Documents/nbu ai/slp.json'
-    RETENTION_FILE = '/Users/andruw/Documents/nbu ai/retention_level.json'
+    # 取得腳本所在目錄（自動適應不同使用者路徑）
+    SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+    # 檔案路徑（使用相對於腳本的路徑）
+    POLICIES_FILE = os.path.join(SCRIPT_DIR, 'policies.json')
+    SLP_FILE = os.path.join(SCRIPT_DIR, 'slp.json')
+    RETENTION_FILE = os.path.join(SCRIPT_DIR, 'retention_level.json')
 
     print("=" * 80)
     print("✅ 最終版本：完整保留 Policy + SLP 資訊 + 自動判定邏輯")
@@ -287,8 +291,8 @@ def main():
 
     print(f"   ✅ 生成 {len(rows)} 筆資料\n")
 
-    # 儲存 CSV
-    output_file = '/Users/andruw/Documents/nbu ai/policies_llm_final.csv'
+    # 儲存 CSV（使用相對於腳本的路徑）
+    output_file = os.path.join(SCRIPT_DIR, 'policies_llm_final.csv')
 
     if rows:
         fieldnames = rows[0].keys()

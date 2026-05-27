@@ -479,9 +479,18 @@ ls -lh policies_llm_final.csv
 ## 📞 需要協助？
 
 如果遇到問題：
-1. 檢查本文的「常見問題排除」
-2. 查看 [USAGE_WORKFLOW.md](USAGE_WORKFLOW.md) 的除錯章節
-3. 聯絡 NetBackup 管理員或專案維護者
+1. 🔍 **優先查看**: [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - 完整問題排除指南
+2. 檢查本文的「常見問題排除」章節
+3. 查看 [USAGE_WORKFLOW.md](USAGE_WORKFLOW.md) 的除錯章節
+4. 聯絡 NetBackup 管理員或專案維護者
+
+### 常見問題快速連結
+
+- [路徑錯誤 FileNotFoundError](TROUBLESHOOTING.md#問題-1-filenotfounderror---找不到檔案)
+- [找不到 JSON 檔案](TROUBLESHOOTING.md#問題-2-找不到-policiesjson-或-slpjson)
+- [找不到 retention_level.json](TROUBLESHOOTING.md#問題-3-找不到-retention_leveljson)
+- [Python 找不到](TROUBLESHOOTING.md#問題-4-找不到-python)
+- [權限錯誤 Permission denied](TROUBLESHOOTING.md#問題-6-permission-denied僅-macoslinux)
 
 ---
 

@@ -292,7 +292,49 @@ python3 -c "import json; print(len(json.load(open('policies.json'))['policies'])
 
 ## 🔴 編碼問題
 
-### 問題 8: 中文亂碼
+### 問題 8: UnicodeDecodeError (Windows)
+
+**錯誤訊息**:
+```
+UnicodeDecodeError: 'cp950' codec can't decode byte 0x8c in position 17166: illegal multibyte sequence
+```
+
+#### 原因
+
+Windows 預設使用 cp950（繁體中文）或 cp1252 編碼，但 JSON 檔案是 UTF-8 編碼。
+
+#### 解決方法 ✅
+
+**已在最新版本修正**！請確認你使用的是最新版 `generate_final_csv_complete.py`。
+
+最新版本在所有 `open()` 操作中都明確指定 `encoding='utf-8'`：
+```python
+with open(file, 'r', encoding='utf-8') as f:
+    data = json.load(f)
+```
+
+**如果使用舊版本**:
+
+手動加入 encoding 參數，修改檔案的第 18, 33, 277 行：
+```python
+# 修正前
+with open(slp_file, 'r') as f:
+
+# 修正後
+with open(slp_file, 'r', encoding='utf-8') as f:
+```
+
+**驗證修正**:
+```bash
+# 檢查是否包含 encoding='utf-8'
+grep -n "encoding='utf-8'" generate_final_csv_complete.py
+
+# 應該看到至少 4 處
+```
+
+---
+
+### 問題 9: CSV 中文亂碼
 
 **症狀**: CSV 中的中文顯示為亂碼
 

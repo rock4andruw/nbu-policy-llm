@@ -15,7 +15,7 @@ from datetime import datetime
 def load_slps(slp_file):
     """載入 SLP 資料"""
     slps = {}
-    with open(slp_file, 'r') as f:
+    with open(slp_file, 'r', encoding='utf-8') as f:
         content = f.read()
         objects = content.strip().split('\n}')
         for obj in objects:
@@ -30,7 +30,7 @@ def load_slps(slp_file):
 
 def load_retention_map(retention_file):
     """載入 Retention Level 對照表"""
-    with open(retention_file, 'r') as f:
+    with open(retention_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
 
     retention_map = {}
@@ -274,7 +274,7 @@ def main():
 
     # 載入資料
     print("\n🔄 載入資料...")
-    with open(POLICIES_FILE, 'r') as f:
+    with open(POLICIES_FILE, 'r', encoding='utf-8') as f:
         policies_data = json.load(f)
 
     slps_dict = load_slps(SLP_FILE)

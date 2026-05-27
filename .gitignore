@@ -1,0 +1,48 @@
+# NetBackup Policy LLM 專案 - Git Ignore
+
+# 原始資料檔案（太大不適合放 Git）
+policies.json
+slp.json
+
+# 生成的資料檔案（包含公司內部資訊）
+policies_llm_final.csv
+retention_level.json
+
+# 舊版輸出（已過時）
+output/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+
+# 暫存檔案
+*.tmp
+*.bak
+*.swp
+*~
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# 測試輸出
+test_*.txt
+sample_*.csv
+
+# 原廠文件（太大）
+原廠文件/*.pdf
+
+# 日誌
+*.log

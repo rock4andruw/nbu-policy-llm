@@ -104,6 +104,7 @@ A: [列出相關策略]
 - [USAGE_WORKFLOW.md](USAGE_WORKFLOW.md) - 詳細使用流程
 - [USER_GUIDE.md](USER_GUIDE.md) - 知識庫使用說明
 - [NBU_SERVER_COMMANDS.md](NBU_SERVER_COMMANDS.md) - NBU Server 操作
+- [FIELDS_REFERENCE.md](FIELDS_REFERENCE.md) - CSV 欄位詳細說明 ⭐
 
 ---
 

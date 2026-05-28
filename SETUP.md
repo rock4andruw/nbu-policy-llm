@@ -155,22 +155,9 @@ nbu ai/
 
 ---
 
-## 🔧 步驟 4: 設定執行權限（僅 macOS）
-
-### macOS
-
-```bash
-cd ~/Documents/nbu\ ai
-chmod +x process_local_json.sh
-```
-
-### Windows
-
-不需要額外設定，`.bat` 檔案可直接執行。
-
 ---
 
-## 🧪 步驟 5: 測試環境
+## 🧪 步驟 4: 測試環境
 
 ### Windows
 ```cmd
@@ -198,9 +185,9 @@ python3 -m py_compile generate_final_csv_complete.py
 
 ---
 
-## 📥 步驟 6: 從 NBU Server 取得資料
+## 📥 步驟 5: 從 NBU Server 取得資料
 
-### 6.1 在 NBU Server 上執行
+### 5.1 在 NBU Server 上執行
 
 詳細說明請參考 [NBU_SERVER_COMMANDS.md](NBU_SERVER_COMMANDS.md)
 
@@ -211,7 +198,7 @@ bppllist -allpolicies -json > policies.json
 /usr/openv/netbackup/bin/admincmd/nbstlutil list -slp -json > slp.json
 ```
 
-### 6.2 傳輸到你的電腦
+### 5.2 傳輸到你的電腦
 
 #### Windows
 
@@ -243,30 +230,44 @@ ls -lh policies.json slp.json
 
 ---
 
-## ▶️ 步驟 7: 執行處理
+## ▶️ 步驟 6: 執行 Python 生成 CSV
 
 ### Windows
 
-**方法 1: 雙擊執行（推薦）**
-
-直接雙擊 `process_local_json.bat`
-
-**方法 2: 命令列執行**
 ```cmd
 cd "C:\Users\%USERNAME%\Documents\nbu ai"
-process_local_json.bat
+python generate_final_csv_complete.py
 ```
 
-### macOS
+### macOS/Linux
 
 ```bash
 cd ~/Documents/nbu\ ai
-./process_local_json.sh
+python3 generate_final_csv_complete.py
+```
+
+**執行輸出範例**:
+```
+================================================================================
+✅ 最終版本：完整保留 Policy + SLP 資訊 + 自動判定邏輯
+================================================================================
+
+🔄 載入資料...
+   ✅ Policies: 634
+   ✅ SLPs: 163
+   ✅ Retention Levels: 103
+
+📝 生成完整資料（所有 634 個 policies）...
+   ✅ 生成 1429 筆資料
+
+💾 CSV 已儲存: policies_llm_final.csv
+   欄位數: 30
+   資料筆數: 1429
 ```
 
 ---
 
-## ✅ 步驟 8: 驗證輸出
+## ✅ 步驟 7: 驗證輸出
 
 執行成功後會產生：
 
@@ -295,7 +296,7 @@ head -5 policies_llm_final.csv
 
 ---
 
-## 📤 步驟 9: 上傳到知識庫
+## 📤 步驟 8: 上傳到知識庫
 
 1. 將 `policies_llm_final.csv` 上傳到公司知識庫平台
 2. 設定 System Prompt（使用 `llm_system_prompt.md` 的內容）
@@ -379,18 +380,6 @@ python3 -m json.tool slp.json > /dev/null
 
 ---
 
-### 問題 5: 權限錯誤（macOS）
-
-**錯誤訊息**: `Permission denied: ./process_local_json.sh`
-
-**解決方法**:
-```bash
-chmod +x process_local_json.sh
-./process_local_json.sh
-```
-
----
-
 ## 📋 完整檢查清單
 
 設定完成後，確認以下項目：
@@ -398,21 +387,21 @@ chmod +x process_local_json.sh
 ### 通用檢查
 - [ ] Python 3.x 已安裝
 - [ ] 專案目錄已建立
-- [ ] 核心檔案已下載（bat/sh + py）
+- [ ] generate_final_csv_complete.py 已下載
 - [ ] retention_level.json 已取得
 - [ ] policies.json 已從 NBU Server 取得
 - [ ] slp.json 已從 NBU Server 取得
 
 ### Windows 專用
 - [ ] Python 已加入 PATH
-- [ ] process_local_json.bat 可執行
+- [ ] 可執行 `python --version`
 
-### macOS 專用
-- [ ] process_local_json.sh 有執行權限
-- [ ] 使用 python3 命令（不是 python）
+### macOS/Linux 專用
+- [ ] 可執行 `python3 --version`
+- [ ] Python 3.9 或以上版本
 
 ### 執行驗證
-- [ ] 執行處理腳本成功
+- [ ] 執行 Python 腳本成功
 - [ ] policies_llm_final.csv 已產生
 - [ ] CSV 有 30 個欄位
 - [ ] 資料筆數正常（> 1000 筆）
@@ -429,39 +418,36 @@ cd C:\Users\%USERNAME%\Documents
 mkdir "nbu ai"
 cd "nbu ai"
 
-REM 2. 下載檔案（從 GitHub 或手動）
+REM 2. 下載檔案（從 GitHub）
+REM 前往 https://github.com/rock4andruw/nbu-policy-llm
+REM 下載並解壓縮
 
 REM 3. 從 NBU Server 取得 JSON（使用 WinSCP）
+REM 下載 policies.json 和 slp.json
 
-REM 4. 執行處理
-process_local_json.bat
+REM 4. 執行 Python 生成 CSV
+python generate_final_csv_complete.py
 
 REM 5. 檢查輸出
 dir policies_llm_final.csv
 ```
 
-### macOS 完整流程
+### macOS/Linux 完整流程
 
 ```bash
-# 1. 建立目錄
+# 1. 建立目錄並下載專案
 cd ~/Documents
-mkdir "nbu ai"
+git clone https://github.com/rock4andruw/nbu-policy-llm.git "nbu ai"
 cd "nbu ai"
 
-# 2. 下載專案
-git clone https://github.com/rock4andruw/nbu-policy-llm.git .
-
-# 3. 設定權限
-chmod +x process_local_json.sh
-
-# 4. 從 NBU Server 取得 JSON
+# 2. 從 NBU Server 取得 JSON
 scp root@nbu-server:/tmp/policies.json ./
 scp root@nbu-server:/tmp/slp.json ./
 
-# 5. 執行處理
-./process_local_json.sh
+# 3. 執行 Python 生成 CSV
+python3 generate_final_csv_complete.py
 
-# 6. 檢查輸出
+# 4. 檢查輸出
 ls -lh policies_llm_final.csv
 ```
 

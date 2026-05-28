@@ -41,12 +41,12 @@
 
 ---
 
-## 🚀 快速開始（本地處理）
+## 🚀 快速開始
 
 ### 實際工作流程
 
 ```
-NBU Server → 導出 JSON → 傳輸到 Client → 本地處理 → 手動上傳知識庫
+NBU Server → 導出 JSON → 傳輸到 Client → Python 處理 → 手動上傳知識庫
 ```
 
 ### 步驟 1: 在 NBU Server 導出資料
@@ -61,38 +61,50 @@ bppllist -allpolicies -json > policies.json
 
 ### 步驟 2: 傳輸到 Client 端
 
-**macOS**:
+**macOS/Linux**:
 ```bash
-cd "/Users/andruw/Documents/nbu ai"
+cd ~/Documents/nbu\ ai
 scp root@nbu-server:/tmp/policies.json ./
 scp root@nbu-server:/tmp/slp.json ./
 ```
 
-**Windows**: 使用 WinSCP 或 FileZilla 下載兩個 JSON 檔案
+**Windows**: 使用 WinSCP 或 FileZilla 下載兩個 JSON 檔案到專案目錄
 
-### 步驟 3: 本地處理（推薦）⭐
+### 步驟 3: 執行 Python 生成 CSV ⭐
 
 **macOS/Linux**:
 ```bash
-cd "/Users/andruw/Documents/nbu ai"
-./process_local_json.sh
+cd ~/Documents/nbu\ ai
+python3 generate_final_csv_complete.py
 ```
 
 **Windows**:
 ```cmd
 cd "C:\Users\YourName\Documents\nbu ai"
-process_local_json.bat
+python generate_final_csv_complete.py
 ```
 
-**腳本會自動完成**：
-1. ✅ 檢查必要檔案（policies.json, slp.json, retention_level.json）
-2. ✅ 備份舊的 CSV 檔案
-3. ✅ 執行 Python 腳本生成 CSV
-4. ✅ 驗證輸出結果
+**執行輸出範例**：
+```
+================================================================================
+✅ 最終版本：完整保留 Policy + SLP 資訊 + 自動判定邏輯
+================================================================================
+
+🔄 載入資料...
+   ✅ Policies: 634
+   ✅ SLPs: 163
+   ✅ Retention Levels: 103
+
+📝 生成完整資料（所有 634 個 policies）...
+   ✅ 生成 1429 筆資料
+
+💾 CSV 已儲存: policies_llm_final.csv
+   欄位數: 30
+   資料筆數: 1429
+```
 
 **輸出結果**：
 - `policies_llm_final.csv` - 可直接上傳到知識庫
-- 舊檔案備份在 `backups/` 目錄
 
 ---
 
@@ -227,17 +239,36 @@ gsutil cp policies_llm_final.csv gs://your-company-kb/
 
 ### 自動化排程（可選）
 
-使用 cron 定期執行：
+建立簡單的 shell 腳本來自動化整個流程：
 
+**建立自動化腳本** (`auto_update.sh`):
 ```bash
+#!/bin/bash
+cd ~/Documents/nbu\ ai
+
+# 從 NBU Server 取得最新資料
+scp root@nbu-server:/tmp/policies.json ./
+scp root@nbu-server:/tmp/slp.json ./
+
+# 生成 CSV
+python3 generate_final_csv_complete.py
+
+echo "更新完成: $(date)" >> update.log
+```
+
+**設定 cron 定期執行**:
+```bash
+# 給予執行權限
+chmod +x ~/Documents/nbu\ ai/auto_update.sh
+
 # 編輯 crontab
 crontab -e
 
 # 每週一早上 6 點執行
-0 6 * * 1 /Users/andruw/Documents/nbu\ ai/nbu_export_and_process.sh bksvr.company.com >> /tmp/nbu_export.log 2>&1
+0 6 * * 1 ~/Documents/nbu\ ai/auto_update.sh >> /tmp/nbu_export.log 2>&1
 
 # 每月 1 號執行
-0 6 1 * * /Users/andruw/Documents/nbu\ ai/nbu_export_and_process.sh bksvr.company.com >> /tmp/nbu_export.log 2>&1
+0 6 1 * * ~/Documents/nbu\ ai/auto_update.sh >> /tmp/nbu_export.log 2>&1
 ```
 
 ---

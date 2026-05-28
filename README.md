@@ -62,23 +62,28 @@ bppllist -allpolicies -json > policies.json
 
 #### 步驟 2: 傳輸到本機
 
-**macOS**:
+**macOS/Linux**:
 ```bash
 cd ~/Documents/nbu\ ai
 scp root@nbu-server:/tmp/policies.json ./
 scp root@nbu-server:/tmp/slp.json ./
 ```
 
-**Windows**: 使用 WinSCP 下載兩個 JSON 檔案
+**Windows**: 使用 WinSCP 或 FileZilla 下載兩個 JSON 檔案
 
-#### 步驟 3: 本地處理
+#### 步驟 3: 執行 Python 生成 CSV
 
-**macOS**:
+**macOS/Linux**:
 ```bash
-./process_local_json.sh
+cd ~/Documents/nbu\ ai
+python3 generate_final_csv_complete.py
 ```
 
-**Windows**: 雙擊 `process_local_json.bat`
+**Windows**:
+```cmd
+cd "C:\Users\你的使用者名稱\Documents\nbu ai"
+python generate_final_csv_complete.py
+```
 
 #### 步驟 4: 上傳到知識庫
 
@@ -107,20 +112,19 @@ A: [列出相關策略]
 ```
 nbu ai/
 ├── README.md                          # 專案說明（本文件）
-├── SETUP.md                           # 新電腦設定指南 ⭐ 新
-├── USAGE_WORKFLOW.md                  # 完整使用流程 ⭐ 新
-├── NBU_SERVER_COMMANDS.md             # NBU Server 操作指南 ⭐ 新
-├── USER_GUIDE.md                      # 知識庫使用說明 ⭐
-├── llm_system_prompt.md               # LLM System Prompt ⭐
+├── SETUP.md                           # 新電腦設定指南 ⭐
+├── USAGE_WORKFLOW.md                  # 完整使用流程 ⭐
+├── NBU_SERVER_COMMANDS.md             # NBU Server 操作指南 ⭐
+├── TROUBLESHOOTING.md                 # 問題排除指南 ⭐
+├── USER_GUIDE.md                      # 知識庫使用說明
+├── llm_system_prompt.md               # LLM System Prompt
 │
-├── process_local_json.sh              # macOS/Linux 處理腳本 🆕
-├── process_local_json.bat             # Windows 處理腳本 🆕
-├── generate_final_csv_complete.py     # Python 主程式
-│
-├── policies_llm_final.csv             # 輸出的知識庫檔案 ⭐
+├── generate_final_csv_complete.py     # Python 主程式 ⭐
 ├── retention_level.json               # 保留等級對照表
 │
-├── tests/                             # 測試目錄 🆕
+├── policies_llm_final.csv             # 輸出的知識庫檔案（執行後產生）
+│
+├── tests/                             # 測試目錄
 │   ├── README.md                      # 測試說明
 │   ├── test_policy_slp_retention.py   # 保留邏輯測試
 │   └── test_policy_slp_integration.py # 整合測試
@@ -129,10 +133,10 @@ nbu ai/
 ├── project_status_summary.md          # 專案現況彙整
 └── .gitignore                         # Git 忽略清單
 
-資料來源（不納入版本控制）:
+資料來源（需從 NBU Server 取得，不納入版本控制）:
 ├── policies.json                      # NetBackup Policies (5.7MB)
 ├── slp.json                          # Storage Lifecycle Policies (256KB)
-└── backups/                          # 自動備份目錄
+└── backups/                          # 自動備份目錄（執行後產生）
 ```
 
 ---
